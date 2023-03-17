@@ -263,6 +263,16 @@ padding: 64px 0px 0px;
 
 }
 
+footer {
+    background-color: var(--BC-Gray1);
+    padding: 20px;
+    text-align: center;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    padding: 1rem 0rem 0rem; 
+}
+
 
 @media (min-width: var(--SizeMonitor3_General)) {
     .container {
