@@ -134,6 +134,10 @@ async function main() {
         if (event.target.classList.contains("bx-plus-circle")) {
             db.cart[articleID].amount++;
             localStorage.setItem("cart", JSON.stringify(db.cart));
+            let articleFind = db.articles.find(function (article) {
+                return article.id === articleID;
+            });
+
             cartUpdateHTML(db);
         } else if (event.target.classList.contains("bx-minus-circle")) {
             db.cart[articleID].amount--;
