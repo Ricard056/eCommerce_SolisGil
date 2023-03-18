@@ -5,6 +5,7 @@
     --SizeHeader: 60px;
     --SizeImgTest: 300px;
     --zIndex_Header: 100;
+    --zIndez_Footer: 200;
     --zIndex_Cart: 400;
     --BC-Gray1: #f2f2f2;     
     --BC-Gray2: #e5e5e5;
@@ -39,6 +40,7 @@ body {
     /* background-color: red; */
     padding: 1rem;
     margin: 0 auto;
+    
     max-width: var(--SizeMonitor3_General);
 }
 
@@ -270,10 +272,10 @@ footer {
     background-color: var(--BC-Gray1);
     padding: 20px;
     text-align: center;
-    position: sticky;
     bottom: 0;
     width: 100%;
     padding: 1rem 0rem 0rem; 
+    z-index: var(--zIndez_Footer);
 }
 
 
