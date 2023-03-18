@@ -13,6 +13,8 @@
     --BC-Gray5: #808080;
     --SizeBxPlus: 36px;
     --NightHeaderText: hsl(212, -21%, -14%);
+    box-sizing: border-box;
+
 }
 
 * {
@@ -173,6 +175,7 @@ padding: 64px 0px 0px;
     position: fixed;
     top: 0;
     right: -100%;
+    
 
     width: 100%;
     max-width: 400px;
@@ -200,7 +203,7 @@ padding: 64px 0px 0px;
     padding: 1rem;
     border-radius: 1rem;
     
-    display: flex;
+    display: grid;
     /* flex-direction: column; */
     /* flex-wrap: wrap; */
     align-items: center;

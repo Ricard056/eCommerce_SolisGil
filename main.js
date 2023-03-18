@@ -71,13 +71,12 @@ function addToCart(db, articleFind) {
 }
 
 function cartUpdateHTML(db) {
-    let cartArticlesHTML = document.querySelector(".cart");
+    let cartArticlesHTML = document.querySelector(".cart_articles");
     let html = "";
 
     for (const key in db.cart) {
         const { amount, category, description, id, image, name, price, quantity } = db.cart[key];
         html += `
-        <div class="cart_articles">
             <div class="cart_articles__img">
                 <img src="${image}" alt="${name}">
             </div>
@@ -89,10 +88,29 @@ function cartUpdateHTML(db) {
                 <i class='bx bx-plus-circle' id="${id}" ></i> 
                 <i class='bx bx-minus-circle' id="${id}" ></i> <span>${amount}</span>
                 <i class='bx bx-trash' id="${id}" ></i> 
-            </div>
-        </div>`;
+            </div>`;
     }
-    cartArticlesHTML.innerHTML = html;
+    cartArticlesHTML.innerHTML = html;      //Modifique variable al inicio, modificar nombre para no confundirme luego ¿?
+
+    cartTotalUpdateHTML(db); //Esto a lo mejor lo muevo
+}
+
+function cartTotalUpdateHTML(db) {
+    let cartTotalArticlesHTML = document.querySelector(".cart_total");
+    let totalCost = 0;
+
+    for (const key in db.cart) {
+        const { amount, category, description, id, image, name, price, quantity } = db.cart[key];
+        let ArticleCost = amount * price;
+        totalCost = totalCost + ArticleCost;
+    }
+
+    let html = `
+        <h3>Total Cost: ${totalCost}.00 USD</h3>
+        <button class="cart_total-buy">Buy</button>
+    `;
+
+    cartTotalArticlesHTML.innerHTML = html;
 }
 
 function printArticlesCart(db) {
@@ -134,10 +152,6 @@ async function main() {
         if (event.target.classList.contains("bx-plus-circle")) {
             db.cart[articleID].amount++;
             localStorage.setItem("cart", JSON.stringify(db.cart));
-            let articleFind = db.articles.find(function (article) {
-                return article.id === articleID;
-            });
-
             cartUpdateHTML(db);
         } else if (event.target.classList.contains("bx-minus-circle")) {
             db.cart[articleID].amount--;
