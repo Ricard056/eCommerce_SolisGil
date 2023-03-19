@@ -20,6 +20,7 @@ function printArticles(db) {
     let html = "";
 
     db.articles.forEach(({ category, description, id, image, name, price, quantity }) => {
+        const buttonClass = quantity === 0 ? "bx-plus-off" : "bx-plus";    //borrar si no sirve
         html += `
         <div class="article">
         <div class="article__img">
@@ -27,7 +28,7 @@ function printArticles(db) {
         </div>
         <div class="article__body">
             <h3>${name} | <span>Stock: ${quantity}</span></h3>
-            <p>${price}.00 USD <i class='bx bx-plus' id="${id}"></i></p>
+            <p>${price}.00 USD <i class='bx ${buttonClass}' id="${id}"></i></p>
         </div>
     </div>`;
     });
@@ -93,7 +94,7 @@ function cartUpdateHTML(db) {
             </div>
         </div>`;
     }
-    cartArticlesHTML.innerHTML = html;      //Modifique variable al inicio, modificar nombre para no confundirme luego ¿?
+    cartArticlesHTML.innerHTML = html;      
 
     cartTotalUpdateHTML(db); //Esto a lo mejor lo muevo
 }
@@ -106,8 +107,8 @@ function cartTotalUpdateHTML(db) {
     for (const key in db.cart) {
         const { amount, category, description, id, image, name, price, quantity } = db.cart[key];
         let ArticleCost = amount * price;
-        totalCost = totalCost + ArticleCost; 
-        totalArticulos = totalArticulos + amount;    
+        totalCost = totalCost + ArticleCost;
+        totalArticulos = totalArticulos + amount;
     }
 
     let html = `
@@ -136,6 +137,15 @@ function printArticlesCart(db) {
     });
 }
 
+// handleCartActions(db) {
+
+// }
+
+// function comprarConfirmacion(db) {
+
+// }
+
+
 async function main() {
     const storedArticles = localStorage.getItem("articles");
 
@@ -157,7 +167,7 @@ async function main() {
         let articleFind = db.articles.find(function (article) {
             return article.id === articleID;
         });
-    
+
         if (event.target.classList.contains("bx-plus-circle")) {
             if (db.cart[articleID].amount < articleFind.quantity) {
                 db.cart[articleID].amount++;
@@ -182,6 +192,43 @@ async function main() {
         // console.log("articles[#].quantity: ", articleFind.quantity);         //Apenas asi encontre el error...
         // console.log("cart[#].amount: ", db.cart[articleID]?.amount || 0);    //
     });
+
+
+    document.querySelector(".cart_total").addEventListener("click", function (event) {
+        if (event.target.classList.contains("cart_total_buy")) {
+            const decisionDeComprar = confirm("Confirmacion de proceder al pago");
+
+            if (decisionDeComprar) {
+                for (const key in db.cart) {
+                    const articleID = Number(key);
+                    const articleFindIndex = db.articles.findIndex(article => article.id === articleID);
+        
+                    if (articleFindIndex !== -1) {
+                        const newQuantity = db.articles[articleFindIndex].quantity - db.cart[articleID].amount;
+        
+                        if (newQuantity >= 0) { 
+                            db.articles[articleFindIndex].quantity = newQuantity;
+                        } else {
+                            alert("ERROR: Sentimos las molestias, en realidad no hay stock."); //Parchesito en caso de un error (que ya no veo que salga)
+                            return;
+                        }
+                    }
+                }
+                db.cart = {};
+                localStorage.setItem("cart", JSON.stringify(db.cart));
+                localStorage.setItem("articles", JSON.stringify(db.articles));
+                printArticles(db);
+                printArticlesCart(db);
+                cartUpdateHTML(db);
+            }
+        
+        }
+    });
+    
+    //Le podria limpiar aun mas el Index al separarlo en funciones, pero ya sirve!
+    //Este lo mandare porque parece ya no tener errores
+    //Para no retrasarme mas, hasta aqui lo dejo.
+
 }
 
 main();

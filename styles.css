@@ -170,6 +170,25 @@ header {
     right: 1.25rem;
 }
 
+.bx-plus-off {
+    background-color: #fff;
+    color: #000;
+    width: var(--SizeBxPlus);
+    height: var(--SizeBxPlus);
+    border-radius: 50%;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: absolute;
+    top: -1.25rem;
+    right: 1.25rem;
+
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
 .cart {
     background-color: darkviolet;
     position: fixed;
@@ -303,6 +322,10 @@ footer {
     width: 100%;
     padding: 1rem 0rem 0rem;
     z-index: var(--zIndez_Footer);
+}
+
+.footer_repositorio span {
+    font-weight: bold;
 }
 
 
