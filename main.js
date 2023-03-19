@@ -227,7 +227,8 @@ async function main() {
     
     //Le podria limpiar aun mas el Index al separarlo en funciones, pero ya sirve!
     //Este lo mandare porque parece ya no tener errores
-    //Para no retrasarme mas, hasta aqui lo dejare. Posiblemente lo updatee mas tarde para separarlo.
+    //Para no retrasarme mas, aqui le mando esta version con el maquetado completado. 
+    //Seguramente lo updatee mas tarde para separarlo.
 
 }
 
