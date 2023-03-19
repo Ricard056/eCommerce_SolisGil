@@ -94,7 +94,7 @@ function cartUpdateHTML(db) {
             </div>
         </div>`;
     }
-    cartArticlesHTML.innerHTML = html;      
+    cartArticlesHTML.innerHTML = html;
 
     cartTotalUpdateHTML(db); //Esto a lo mejor lo muevo
 }
@@ -137,29 +137,7 @@ function printArticlesCart(db) {
     });
 }
 
-// handleCartActions(db) {
-
-// }
-
-// function comprarConfirmacion(db) {
-
-// }
-
-
-async function main() {
-    const storedArticles = localStorage.getItem("articles");
-
-    const db = {
-        articles: storedArticles ? JSON.parse(storedArticles) : await getArticless(),
-        cart: {}
-    };
-
-    CartWhenOpenOrResetBrowser(db);
-    printArticles(db);
-    printHome();
-    printArticlesCart(db);
-    handleShowCart();
-
+function handleCartActions(db) {
     let cartHTML = document.querySelector(".cart");
 
     cartHTML.addEventListener("click", function (event) {
@@ -193,7 +171,9 @@ async function main() {
         // console.log("cart[#].amount: ", db.cart[articleID]?.amount || 0);    //
     });
 
+}
 
+function comprarConfirmacion(db) {
     document.querySelector(".cart_total").addEventListener("click", function (event) {
         if (event.target.classList.contains("cart_total_buy")) {
             const decisionDeComprar = confirm("Confirmacion de proceder al pago");
@@ -202,11 +182,11 @@ async function main() {
                 for (const key in db.cart) {
                     const articleID = Number(key);
                     const articleFindIndex = db.articles.findIndex(article => article.id === articleID);
-        
+
                     if (articleFindIndex !== -1) {
                         const newQuantity = db.articles[articleFindIndex].quantity - db.cart[articleID].amount;
-        
-                        if (newQuantity >= 0) { 
+
+                        if (newQuantity >= 0) {
                             db.articles[articleFindIndex].quantity = newQuantity;
                         } else {
                             alert("ERROR: Sentimos las molestias, en realidad no hay stock."); //Parchesito en caso de un error (que ya no veo que salga)
@@ -221,14 +201,32 @@ async function main() {
                 printArticlesCart(db);
                 cartUpdateHTML(db);
             }
-        
         }
     });
-    
+}
+
+
+async function main() {
+    const storedArticles = localStorage.getItem("articles");
+
+    const db = {
+        articles: storedArticles ? JSON.parse(storedArticles) : await getArticless(),
+        cart: {}
+    };
+
+    CartWhenOpenOrResetBrowser(db);
+    printArticles(db);
+    printHome();
+    printArticlesCart(db);
+    handleShowCart();
+
+    handleCartActions(db);
+    comprarConfirmacion(db);
+
     //Le podria limpiar aun mas el Index al separarlo en funciones, pero ya sirve!
     //Este lo mandare porque parece ya no tener errores
     //Para no retrasarme mas, aqui le mando esta version con el maquetado completado. 
-    //Seguramente lo updatee mas tarde para separarlo.
+    //Seguramente lo updatee mas tarde para separarlo. // LISTO
 
 }
 
