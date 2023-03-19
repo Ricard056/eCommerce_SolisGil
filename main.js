@@ -58,7 +58,8 @@ function printHome() {
 
 function addToCart(db, articleFind) {
     if (db.cart[articleFind.id]) {
-        if (articleFind.quantity === db.cart[articleFind.id].amount) return alert("NO DISPONIBLE")
+        if (articleFind.quantity === db.cart[articleFind.id].amount)
+            return alert("NO DISPONIBLE, ESPERE A NUEVO STOCK")
         db.cart[articleFind.id].amount++;
     } else {
         let articleV2 = JSON.parse(JSON.stringify(articleFind));
@@ -77,6 +78,7 @@ function cartUpdateHTML(db) {
     for (const key in db.cart) {
         const { amount, category, description, id, image, name, price, quantity } = db.cart[key];
         html += `
+        <div class="cart_articles__item">
             <div class="cart_articles__img">
                 <img src="${image}" alt="${name}">
             </div>
@@ -88,7 +90,8 @@ function cartUpdateHTML(db) {
                 <i class='bx bx-plus-circle' id="${id}" ></i> 
                 <i class='bx bx-minus-circle' id="${id}" ></i> <span>${amount}</span>
                 <i class='bx bx-trash' id="${id}" ></i> 
-            </div>`;
+            </div>
+        </div>`;
     }
     cartArticlesHTML.innerHTML = html;      //Modifique variable al inicio, modificar nombre para no confundirme luego ¿?
 
@@ -98,16 +101,19 @@ function cartUpdateHTML(db) {
 function cartTotalUpdateHTML(db) {
     let cartTotalArticlesHTML = document.querySelector(".cart_total");
     let totalCost = 0;
+    let totalArticulos = 0;
 
     for (const key in db.cart) {
         const { amount, category, description, id, image, name, price, quantity } = db.cart[key];
         let ArticleCost = amount * price;
-        totalCost = totalCost + ArticleCost;
+        totalCost = totalCost + ArticleCost; 
+        totalArticulos = totalArticulos + amount;    
     }
 
     let html = `
         <h3>Total Cost: ${totalCost}.00 USD</h3>
-        <button class="cart_total-buy">Buy</button>
+        <h4>${totalArticulos} articulos</h4>
+        <button class="cart_total_buy">Buy</button>
     `;
 
     cartTotalArticlesHTML.innerHTML = html;
@@ -148,11 +154,18 @@ async function main() {
 
     cartHTML.addEventListener("click", function (event) {
         let articleID = Number(event.target.id);
-
+        let articleFind = db.articles.find(function (article) {
+            return article.id === articleID;
+        });
+    
         if (event.target.classList.contains("bx-plus-circle")) {
-            db.cart[articleID].amount++;
-            localStorage.setItem("cart", JSON.stringify(db.cart));
-            cartUpdateHTML(db);
+            if (db.cart[articleID].amount < articleFind.quantity) {
+                db.cart[articleID].amount++;
+                localStorage.setItem("cart", JSON.stringify(db.cart));
+                cartUpdateHTML(db);
+            } else {
+                return alert("NO DISPONIBLE, ESPERE A NUEVO STOCK");
+            }
         } else if (event.target.classList.contains("bx-minus-circle")) {
             db.cart[articleID].amount--;
             if (db.cart[articleID].amount === 0) {
@@ -165,6 +178,9 @@ async function main() {
             localStorage.setItem("cart", JSON.stringify(db.cart));
             cartUpdateHTML(db);
         }
+        // console.log(db)
+        // console.log("articles[#].quantity: ", articleFind.quantity);         //Apenas asi encontre el error...
+        // console.log("cart[#].amount: ", db.cart[articleID]?.amount || 0);    //
     });
 }
 
